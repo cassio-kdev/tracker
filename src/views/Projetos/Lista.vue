@@ -24,6 +24,11 @@
                     <i class="fas fa-pencil-alt"></i>
                   </span>
                 </router-link>
+                <button class="button m1-2 is-danger" @click="exclui(projeto.id)">
+                  <span class="icon is-small">
+                    <i class="fa fa-trash"></i>
+                  </span>
+                </button>
               </td>
           </tr>
         </tbody>
@@ -32,14 +37,26 @@
   </template>
   <script lang="ts">
   import { useStore } from "@/store";
+  import { EXCLUIR_PROJETO } from "@/store/tipo-mutacoes";
   import { computed, defineComponent } from "vue";
-  
+  import useNotificador from "@/hooks/notificador";
+  import { TipoNotificacao } from "@/interfaces/INotificacao";
+
   export default defineComponent({
     name: "ListA",
+    methods:{
+      exclui(id: string){
+        this.store.commit(EXCLUIR_PROJETO, id)
+        this.notificar(TipoNotificacao.SUCESSO, 'Operação','Operação realizada com sucesso')
+      }
+    },
     setup() {
       const store = useStore();
+      const { notificar } = useNotificador();
       return {
         projetos: computed(() => store.state.projetos),
+        store,
+        notificar
       };
     },
   });

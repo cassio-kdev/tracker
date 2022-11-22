@@ -17,8 +17,11 @@
   </section>
 </template>
 <script lang="ts">
+import { TipoNotificacao } from "@/interfaces/INotificacao";
 import { useStore } from "@/store";
+import { ADICIONA_PROJETO, ALTERAR_PROJETO } from "@/store/tipo-mutacoes";
 import { defineComponent } from "vue";
+import useNotificador from "@/hooks/notificador";
 
 export default defineComponent({
   name: "FormuLario",
@@ -40,24 +43,26 @@ export default defineComponent({
   },
   methods: {
     salvar() {
-
       if(this.id){
 
-        this.store.commit("ALTERAR_PROJETO", {
+        this.store.commit(ALTERAR_PROJETO, {
           id: this.id,
           nome: this.nomeDoProjeto
         });
       }else{
-        this.store.commit("ADICIONA_PROJETO", this.nomeDoProjeto);
+        this.store.commit(ADICIONA_PROJETO, this.nomeDoProjeto);
       }
       this.nomeDoProjeto = "";
-      this.$router.push('/projetos')
+      this.notificar(TipoNotificacao.SUCESSO, 'Operação','Operação realizada com sucesso');
+      this.$router.push('/projetos');
     },
   },
   setup() {
     const store = useStore();
+    const { notificar } = useNotificador()
     return {
-      store
+      store,
+      notificar
     };
   },
 });
