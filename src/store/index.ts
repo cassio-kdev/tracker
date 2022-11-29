@@ -1,4 +1,4 @@
-import { OBTER_PROJETOS } from './tipo-acoes';
+import { ALTERAR_PROJETOS, CADASTRAR_PROJETOS, OBTER_PROJETOS,REMOVER_PROJETOS } from './tipo-acoes';
 import { INotificacao } from './../interfaces/INotificacao';
 import { EXCLUIR_PROJETO, ALTERAR_PROJETO, ADICIONA_PROJETO, NOTIFICAR, DEFINIR_PROJETOS } from './tipo-mutacoes';
 import IProjeto from "@/interfaces/IProjeto";
@@ -49,6 +49,18 @@ export const store = createStore<Estado>({
         [OBTER_PROJETOS]({commit}){
             http.get('projetos')
                 .then(resp => commit(DEFINIR_PROJETOS,resp.data))
+        },
+        [CADASTRAR_PROJETOS](contexto, nomeDoProjeto: string){
+            return http.post('/projetos',{
+                nome: nomeDoProjeto
+            })
+        },
+        [ALTERAR_PROJETOS](contexto, projeto: IProjeto){
+            return http.put(`/projetos/${projeto.id}`,projeto)
+        },
+        [REMOVER_PROJETOS](contexto, id: string){
+            return http.delete(`/projetos/${id}`)
+                .then(() => this.commit(EXCLUIR_PROJETO, id))
         }
     }
 });
