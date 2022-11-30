@@ -19,9 +19,9 @@
 <script lang="ts">
 import { TipoNotificacao } from "@/interfaces/INotificacao";
 import { useStore } from "@/store";
-import { ADICIONA_PROJETO, ALTERAR_PROJETO } from "@/store/tipo-mutacoes";
 import { defineComponent } from "vue";
 import useNotificador from "@/hooks/notificador";
+import { CADASTRAR_PROJETOS, ALTERAR_PROJETOS } from "@/store/tipo-acoes";
 
 export default defineComponent({
   name: "FormuLario",
@@ -45,13 +45,16 @@ export default defineComponent({
     salvar() {
       if(this.id){
 
-        this.store.commit(ALTERAR_PROJETO, {
+        this.store.dispatch(ALTERAR_PROJETOS, {
           id: this.id,
           nome: this.nomeDoProjeto
-        });
+        }).then(() => this.sucesso())
       }else{
-        this.store.commit(ADICIONA_PROJETO, this.nomeDoProjeto);
+        this.store.dispatch(CADASTRAR_PROJETOS, this.nomeDoProjeto)
+        .then(() => this.sucesso())
       }
+    },
+    sucesso(){
       this.nomeDoProjeto = "";
       this.notificar(TipoNotificacao.SUCESSO, 'Operação','Operação realizada com sucesso');
       this.$router.push('/projetos');
