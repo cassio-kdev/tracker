@@ -1,5 +1,5 @@
 import { ADICIONA_PROJETO, ALTERAR_PROJETO, DEFINIR_PROJETOS, EXCLUIR_PROJETO } from './../../tipo-mutacoes';
-import { IProjeto } from "@/interfaces/IProjeto";
+import IProjeto from "@/interfaces/IProjeto";
 import { Estado } from "@/store";
 import { Module } from "vuex";
 import http from '@/http';
